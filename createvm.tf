@@ -100,6 +100,8 @@ resource "yandex_compute_instance" "k8s_nodes" {
     ssh-keys = "regina:${file("/home/regina/.ssh/id_rsa.pub")}"
     user-data = <<-EOT
       #cloud-config
+      hostname: ${count.index == 0 ? "master" : "worker-${count.index}"}
+      manage_etc_hosts: true
       users:
         - name: regina
           sudo: ALL=(ALL) NOPASSWD:ALL

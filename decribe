@@ -3,5 +3,10 @@
 chmod +x terraform_inventory.py ./terraform_inventory.py
 
 3. Ansible:
+terraform output -json > terraform_output.json
+chmod +x ./terraform_inventory.py
 install microk8s on all node-server
+
+ansible-inventory -i ./terraform_inventory.py --list -vvvv
+ansible-playbook -i terraform_inventory.py playbook.yml
 4.
