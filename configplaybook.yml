@@ -1,12 +1,66 @@
-- name: Install and configure microk8s for all host 
+- name: Install and configure microk8s
   hosts: all
+  become: yes
   tasks:
-    - name: Ensure microk8s is installed
-      raw: sudo apt update && sudo snap install microk8s --classic \
-           microk8s enable dashboard \
-           microk8s enable dns \
-           microk8s enable registry \
-           microk8s enable istio 
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install snap if not present
+      apt:
+        name: snapd
+        state: present
+
+    - name: Install microk8s
+      snap:
+        name: microk8s
+        classic: yes
+        state: present
+
+    - name: Ensure user is in microk8s group
+      user:
+        name: regina
+        groups: microk8s
+        append: yes
+
+    - name: Allow user access to microk8s commands
+      file:
+        path: /home/regina/.kube
+        state: directory
+        owner: regina
+        group: regina
+        mode: '0755'
+
+    - name: Enable MicroK8s add-ons
+      command: microk8s enable dashboard dns registry istio
+      register: microk8s_addons
+      changed_when: "'Nothing to do' not in microk8s_addons.stdout"
+
+    - name: Ensure MicroK8s starts on boot
+      command: systemctl enable --now snap.microk8s.daemon-apiserver
+      ignore_errors: yes
+
+    - name: Wait for MicroK8s to be ready
+      command: microk8s status --wait-ready
+      retries: 10
+      delay: 10
+      register: result
+      until: result.rc == 0
+
+    - name: Get microk8s join token (only on master)
+      command: microk8s add-node
+      register: join_command
+      when: "'master' in group_names"
+      changed_when: false
+
+    - name: Save join command for workers
+      set_fact:
+        join_cmd: "{{ join_command.stdout_lines | last }}"
+      when: "'master' in group_names"
+
+    - name: Join worker nodes to the cluster
+      command: "{{ hostvars['master']['join_cmd'] }}"
+      when: "'worker' in group_names"
 
 
 

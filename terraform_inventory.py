@@ -50,11 +50,3 @@ if __name__ == "__main__":
     terraform_outputs = get_terraform_outputs()
     inventory = generate_inventory(terraform_outputs)
     print(json.dumps(inventory, indent=2))
-
-
-
-
-
-
-
-
