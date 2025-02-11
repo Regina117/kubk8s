@@ -21,10 +21,7 @@ def generate_inventory(outputs):
             "hostvars": {}
         },
         "all": {
-            "children": [
-                "master",
-                "workers"
-            ]
+            "children": ["master", "workers"]
         },
         "master": {
             "hosts": []
@@ -34,9 +31,8 @@ def generate_inventory(outputs):
         }
     }
 
-    if "nodes_external_ips" in outputs and outputs["nodes_external_ips"]["value"]:
-        nodes = outputs["nodes_external_ips"]["value"]
-        for name, ip in nodes.items():
+    if "nodes_external_ips" in outputs:
+        for name, ip in outputs["nodes_external_ips"]["value"].items():
             if "master" in name:
                 inventory["master"]["hosts"].append(ip)
             else:
@@ -44,7 +40,8 @@ def generate_inventory(outputs):
 
             inventory["_meta"]["hostvars"][ip] = {
                 "ansible_user": "regina",
-                "ansible_ssh_private_key_file": "/home/regina/.ssh/id_rsa"
+                "ansible_ssh_private_key_file": "/home/regina/.ssh/id_rsa",
+                "ansible_ssh_common_args": "-o StrictHostKeyChecking=no"
             }
 
     return inventory
