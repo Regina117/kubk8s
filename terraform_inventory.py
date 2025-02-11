@@ -22,46 +22,30 @@ def generate_inventory(outputs):
         },
         "all": {
             "children": [
-                "jenkins",
-                "nexus",
-                "prod"
+                "master",
+                "workers"
             ]
         },
-        "jenkins": {
+        "master": {
             "hosts": []
         },
-        "nexus": {
+        "workers": {
             "hosts": []
-        },
-        "prod": {
-            "hosts": []
-        },
+        }
     }
 
-    if "jenkins_ip" in outputs and outputs["jenkins_ip"]["value"]:
-        jenkins_ip = outputs["jenkins_ip"]["value"]
-        inventory["jenkins"]["hosts"].append(jenkins_ip)
-        inventory["_meta"]["hostvars"][jenkins_ip] = {
-            "ansible_user": "root",
-            "ansible_ssh_private_key_file": "/root/.ssh/id_rsa"
-        }
+    if "nodes_external_ips" in outputs and outputs["nodes_external_ips"]["value"]:
+        nodes = outputs["nodes_external_ips"]["value"]
+        for name, ip in nodes.items():
+            if "master" in name:
+                inventory["master"]["hosts"].append(ip)
+            else:
+                inventory["workers"]["hosts"].append(ip)
 
-    if "nexus_ip" in outputs and outputs["nexus_ip"]["value"]:
-        nexus_ip = outputs["nexus_ip"]["value"]
-        inventory["nexus"]["hosts"].append(nexus_ip)
-        inventory["_meta"]["hostvars"][nexus_ip] = {
-            "ansible_user": "root",
-            "ansible_ssh_private_key_file": "/root/.ssh/id_rsa"
-        }
-        
-    if "prod_ip" in outputs and outputs["prod_ip"]["value"]:
-        prod_ip = outputs["prod_ip"]["value"]
-        inventory["prod"]["hosts"].append(prod_ip)
-        inventory["_meta"]["hostvars"][prod_ip] = {
-            "ansible_user": "root",
-            "ansible_ssh_private_key_file": "/root/.ssh/id_rsa"
-        }
-        
+            inventory["_meta"]["hostvars"][ip] = {
+                "ansible_user": "regina",
+                "ansible_ssh_private_key_file": "/home/regina/.ssh/id_rsa"
+            }
 
     return inventory
 
