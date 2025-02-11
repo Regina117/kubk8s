@@ -1,0 +1,5 @@
+1. create Iac with Terraform
+2. Connect ansible dinamic IP 
+3. Ansible:
+install microk8s on all node-server
+4.
