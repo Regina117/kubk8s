@@ -37,7 +37,11 @@
       changed_when: "'Nothing to do' not in microk8s_addons.stdout"
 
     - name: Ensure MicroK8s starts on boot
-      command: systemctl enable --now snap.microk8s.daemon-apiserver
+      command: snap start microk8s
+      ignore_errors: yes
+
+    - name: Enable MicroK8s starts on boot
+      command: snap enable microk8s
       ignore_errors: yes
 
     - name: Wait for MicroK8s to be ready

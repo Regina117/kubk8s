@@ -1,12 +1,13 @@
 1. create Iac with Terraform createvm.tf
 2. Connect ansible dinamic IP terraform_inventory.py
 chmod +x terraform_inventory.py ./terraform_inventory.py
+ssh -i /home/regina/.ssh/id_rsa regina@master_IP
 
-3. Ansible:
+3. Ansible: install microk8s on all node-server
 terraform output -json > terraform_output.json
 chmod +x ./terraform_inventory.py
-install microk8s on all node-server
+
 
 ansible-inventory -i ./terraform_inventory.py --list -vvvv
-ansible-playbook -i terraform_inventory.py playbook.yml
+ansible-playbook -i terraform_inventory.py configplaybook.yml
 4.
