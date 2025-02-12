@@ -14,3 +14,13 @@ ansible-playbook -i terraform_inventory.py configplaybook.yml
 microk8s status
 microk8s add-node:
 microk8s join 10.0.0.28:25000/2bdba38de9e4bf79b865ff64fd254017/f9952d19b3d7
+(для каждой node повторить это действие)
+
+5. Развертывание GeoServer в кластере MicroK8s. На 1 master и 3 worker.
+Используем Deployment + Service и PersistentVolume для хранения данных.
+
+
+6. microk8s kubectl apply -f deployment.yaml
+microk8s kubectl apply -f geoserver-ingress.yaml
+microk8s kubectl apply -f geoserver-pv.yaml
+
