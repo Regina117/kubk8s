@@ -13,5 +13,11 @@ RUN unzip geoserver-2.26.x-latest-bin.zip && rm geoserver-2.26.x-latest-bin.zip
 # Проверяем содержимое
 RUN ls -l
 
+# Даем права на запуск для startup.sh
+RUN chmod +x ./bin/startup.sh
+
+# Даем права на запись в директорию данных
+RUN chmod -R 777 /opt/geoserver/data_dir
+
 EXPOSE 8080
-CMD ["java", "-jar", "start.jar"]
+CMD ["./bin/startup.sh"]
