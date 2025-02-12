@@ -21,6 +21,6 @@ microk8s join 10.0.0.28:25000/2bdba38de9e4bf79b865ff64fd254017/f9952d19b3d7
 
 
 6. 
-microk8s kubectl apply -f geoserver-deployment.yaml -f geoserver-service.yaml-f geoserver-ingress.yaml -f geoserver-pv.yaml
+microk8s kubectl apply -f geoserver-deployment.yaml -f geoserver-service.yaml -f geoserver-ingress.yaml -f geoserver-pv.yaml
 
 
