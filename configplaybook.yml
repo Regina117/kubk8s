@@ -66,7 +66,31 @@
         join_cmd: "{{ join_command.stdout_lines | last }}"
       when: "'master' in group_names"
 
+    - name: Wait for master to generate join token
+      wait_for:
+        path: /var/snap/microk8s/current/credentials/cluster-tokens.txt
+        timeout: 30
+      when: "'master' in group_names"   
+
     - name: Join worker nodes to the cluster
       command: "{{ hostvars['master']['join_cmd'] }}"
       when: "'worker' in group_names"
+      register: join_result
+      retries: 3
+      delay: 10
+      until: join_result.rc == 0
+      ignore_errors: yes
+
+    - name: Debug join result
+      debug: 
+        var: join_result
+      when: "'worker' in group_names"
+
+    - name: Verify cluster nodes
+      command: microk8s kubectl get nodes
+      register: nodes
+      until: "'Ready' in nodes.stdout"
+      retries: 10
+      delay: 10
+      when: "'master' in group_names"
 

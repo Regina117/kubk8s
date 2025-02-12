@@ -10,4 +10,7 @@ chmod +x ./terraform_inventory.py
 
 ansible-inventory -i ./terraform_inventory.py --list -vvvv
 ansible-playbook -i terraform_inventory.py configplaybook.yml
-4.
+4. ssh -i /home/regina/.ssh/id_rsa regina@master_IP
+microk8s status
+microk8s add-node:
+microk8s join 10.0.0.28:25000/2bdba38de9e4bf79b865ff64fd254017/f9952d19b3d7
