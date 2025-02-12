@@ -11,11 +11,24 @@
         name: snapd
         state: present
 
+    - name: Enable snapd
+      systemd:
+        name: snapd.socket
+        enabled: yes
+        state: started
+
+    - name: Create symbolic link for snap
+      file: 
+        src: /var/lib/snapd/snap 
+        dest: /snap
+        state: link
+
     - name: Install microk8s
       snap:
         name: microk8s
         classic: yes
         state: present
+      when: if error:  dnf reinstall snapd and snap install microk8s --classic
 
     - name: Ensure user is in microk8s group
       user:
@@ -37,12 +50,9 @@
       changed_when: "'Nothing to do' not in microk8s_addons.stdout"
 
     - name: Ensure MicroK8s starts on boot
-      command: snap start microk8s
-      ignore_errors: yes
-
-    - name: Enable MicroK8s starts on boot
-      command: snap enable microk8s
-      ignore_errors: yes
+      command: snap.microk8s.daemon-containerd
+      enabled: yes
+      state: started
 
     - name: Wait for MicroK8s to be ready
       command: microk8s status --wait-ready
