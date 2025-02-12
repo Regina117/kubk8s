@@ -20,7 +20,7 @@ microk8s join 10.0.0.28:25000/2bdba38de9e4bf79b865ff64fd254017/f9952d19b3d7
 Используем Deployment + Service и PersistentVolume для хранения данных.
 
 
-6. microk8s kubectl apply -f deployment.yaml
-microk8s kubectl apply -f geoserver-ingress.yaml
-microk8s kubectl apply -f geoserver-pv.yaml
+6. 
+microk8s kubectl apply -f deployment.yaml -f geoserver-ingress.yaml -f geoserver-pv.yaml
+
 

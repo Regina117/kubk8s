@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: geoserver
-          image: myrepo/geoserver:2.25
+          image: reg117/geoserver
           ports:
             - containerPort: 8080
           volumeMounts:
