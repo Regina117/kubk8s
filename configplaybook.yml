@@ -49,9 +49,10 @@
       changed_when: "'Nothing to do' not in microk8s_addons.stdout"
 
     - name: Ensure MicroK8s starts on boot
-      command: snap.microk8s.daemon-containerd
-      enabled: yes
-      state: started
+      systemd:
+        name: snap.microk8s.daemon-containerd
+        enabled: yes
+        state: started
 
     - name: Wait for MicroK8s to be ready
       command: microk8s status --wait-ready
