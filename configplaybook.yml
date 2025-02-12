@@ -17,12 +17,6 @@
         enabled: yes
         state: started
 
-    - name: Create symbolic link for snap
-      file: 
-        src: /var/lib/snapd/snap 
-        dest: /snap
-        state: link
-
     - name: Install microk8s
       snap:
         name: microk8s
@@ -75,10 +69,4 @@
     - name: Join worker nodes to the cluster
       command: "{{ hostvars['master']['join_cmd'] }}"
       when: "'worker' in group_names"
-
-
-
-
-
-
 
