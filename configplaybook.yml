@@ -28,7 +28,6 @@
         name: microk8s
         classic: yes
         state: present
-      when: if error:  dnf reinstall snapd and snap install microk8s --classic
 
     - name: Ensure user is in microk8s group
       user:
